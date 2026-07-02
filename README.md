@@ -72,7 +72,8 @@ In this ecosystem, `rumble-crew` is the product surface for agentic teamwork. It
 ## Does Not Own
 
 - Actual orchestration, routing, and execution policy: belongs to `cos-matic`.
-- Tool execution: belongs to Wrench.
+- Tool inspection/validation evidence: belongs to Wrench.
+- Client-platform primitives, tokens, accessibility, and native/web adapters: belong to Portal.
 - Agent runtime substrate, artifacts, and distribution: belongs to Gear.
 - Generic project management unrelated to agentic work.
 
@@ -80,6 +81,7 @@ In this ecosystem, `rumble-crew` is the product surface for agentic teamwork. It
 
 - Consumes plans, runs, incidents, gates, and execution state from Bolt.
 - Presents evidence emitted by Wrench and Gear.
+- Uses Portal when building shared client surfaces for agent/human collaboration.
 - Can write user decisions, approvals, comments, and assignments back into orchestration flows.
 
 ## Product Vision Challenge
