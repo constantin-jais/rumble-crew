@@ -1,23 +1,24 @@
-# Rumble Crew
+# rumble-crew
 
-**Layer:** Rumble — Product  
-**Role:** agentic teamwork workspace  
-**Mission:** make human/agent collaboration visible, assignable, reviewable, and trustworthy.
+**Couche** : Rumble
+**Rôle** : workspace humain/agent pour tâches, blocages, approvals et évidence
+**deployment_class** : product-linkable
+**Maturité** : contract-first — specs seules/0 runtime ; fixtures encore manquantes
+**Place dans la chaîne DoD** : doit présenter le travail agentique et les preuves produites par Bolt/Wrench/Gear, sans exécuter lui-même.
+**Doctrine** : surface produit de gouvernance humaine ; jamais cerveau d’orchestration.
+**Souveraineté** : licences MIT/Apache/MPL compatibles ; pas d’AGPL/SSPL dans la chaîne versionnée.
+
+## Ce que ça fait
+
+Définit le futur tableau où humains et agents voient tâches, statuts, blocages, approvals et preuves. Aujourd’hui, le dépôt est une intention/spec précoce : pas de runtime local ni équipe opérationnelle.
+
+## Où ça se branche
+
+- Amont : plans et evidence refs de [bolt-cos-matic](https://github.com/constantin-jais/bolt-cos-matic), Wrench et Gear.
+- Aval : UX Rumble de suivi/revue ; futurs contrats `AgentTaskRequest` et approval policy.
+- Specs : [ecosystem/specs/rumble-crew](https://github.com/constantin-jais/constantin-jais/tree/main/ecosystem/specs/rumble-crew) quand publiées dans le control plane.
 
 ---
-
-## Stack role
-
-- **Layer:** Rumble — Product.
-- **Role:** agentic teamwork workspace.
-- **Mission:** make human/agent collaboration visible, assignable, reviewable, and trustworthy.
-- **Maturity:** `contract-first`.
-- **Scale-ready:** no — specs exist, but the runtime is not present locally.
-- **Current increment:** P0 specs.
-- **Learning value:** human/agent tasks, approvals, evidence, run recovery, and operational transparency.
-- **Next quality step:** define the `AgentTaskRequest` lifecycle and human approval policy.
-
-See the ecosystem cockpit in [`constantin-jais/ecosystem/status.md`](https://github.com/constantin-jais/constantin-jais/blob/main/ecosystem/status.md).
 
 ## Dogfooding
 
@@ -71,7 +72,7 @@ In this ecosystem, `rumble-crew` is the product surface for agentic teamwork. It
 
 ## Does Not Own
 
-- Actual orchestration, routing, and execution policy: belongs to `cos-matic`.
+- Actual orchestration, routing, and execution policy: belongs to `bolt-cos-matic`.
 - Tool inspection/validation evidence: belongs to Wrench.
 - Client-platform primitives, tokens, accessibility, and native/web adapters: belong to Portal.
 - Agent runtime substrate, artifacts, and distribution: belongs to Gear.
