@@ -1,6 +1,6 @@
 # rumble-crew
 
-**Couche** : Rumble
+**Outil** : Rumble
 **Rôle** : workspace humain/agent pour tâches, blocages, approvals et évidence
 **deployment_class** : product-linkable
 **Maturité** : contract-first — specs seules/0 runtime ; fixtures encore manquantes
@@ -22,7 +22,7 @@ Définit le futur tableau où humains et agents voient tâches, statuts, blocage
 
 ## Dogfooding
 
-This repository is part of the forge dogfooding loop: the ecosystem should use its own tools to make specs, maturity, contracts, releases, and product documentation observable.
+This repository is part of the Daidalos dogfooding loop: the ecosystem should use its own tools to make specs, maturity, contracts, releases, and product documentation observable.
 
 Current visible evidence:
 
