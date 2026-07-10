@@ -22,7 +22,7 @@ Définit le futur tableau où humains et agents voient tâches, statuts, blocage
 
 ## Dogfooding
 
-This repository is part of the **Free AI** tool family — one tool, one job, stacked.
+This repository is part of the **Libre IA** tool family — one tool, one job, stacked.
 
 Current visible evidence:
 
