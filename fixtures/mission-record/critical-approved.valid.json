@@ -1,0 +1,66 @@
+{
+  "format": "libre-ai.agent-board.mission-record.v1",
+  "mission_id": "mission-rotate-release-key",
+  "revision": 2,
+  "state": "approved",
+  "intent": "Prepare a release-key rotation without exposing key material.",
+  "scope": {
+    "in_scope": ["Generate a rotation plan and rollback checklist"],
+    "out_of_scope": ["Read private key material", "Activate the new key"]
+  },
+  "risk": {
+    "level": "critical",
+    "reasons": ["A release-key mistake could block future verified releases"]
+  },
+  "requested_by": { "actor_id": "human:release-owner", "kind": "human" },
+  "acceptance_conditions": [
+    {
+      "condition_id": "ac-plan-only",
+      "description": "The output contains planning steps only and no key material.",
+      "evidence_required": true
+    }
+  ],
+  "approvals": [
+    {
+      "approval_id": "approval-security-reviewer",
+      "decision": "approved",
+      "actor": { "actor_id": "human:security-reviewer", "kind": "human" },
+      "at": "2026-07-13T09:05:00Z",
+      "reason": "The mission is planning-only and excludes secret access."
+    }
+  ],
+  "events": [
+    {
+      "sequence": 1,
+      "event_id": "event-proposed",
+      "from": null,
+      "to": "proposed",
+      "actor": { "actor_id": "human:release-owner", "kind": "human" },
+      "at": "2026-07-13T09:00:00Z",
+      "reason": "The current release key reaches its scheduled rotation window."
+    },
+    {
+      "sequence": 2,
+      "event_id": "event-awaiting-approval",
+      "from": "proposed",
+      "to": "awaiting_approval",
+      "actor": { "actor_id": "human:release-owner", "kind": "human" },
+      "at": "2026-07-13T09:01:00Z",
+      "reason": "Critical missions require a distinct human reviewer."
+    },
+    {
+      "sequence": 3,
+      "event_id": "event-approved",
+      "from": "awaiting_approval",
+      "to": "approved",
+      "actor": { "actor_id": "human:security-reviewer", "kind": "human" },
+      "at": "2026-07-13T09:05:00Z",
+      "reason": "The planning boundary and rollback condition are explicit."
+    }
+  ],
+  "blockers": [],
+  "reported_activity": [],
+  "execution_ref": null,
+  "result": null,
+  "human_verdict": null
+}

@@ -1,0 +1,28 @@
+{
+  "format": "libre-ai.agent-board.mission-record.v1",
+  "mission_id": "mission-profile-agent",
+  "revision": 1,
+  "state": "proposed",
+  "intent": "Create a persistent performance profile for one agent.",
+  "scope": { "in_scope": ["Rank the agent"], "out_of_scope": [] },
+  "risk": { "level": "medium", "reasons": ["Profiles can turn activity into misleading identity claims"] },
+  "requested_by": { "actor_id": "human:manager", "kind": "human" },
+  "acceptance_conditions": [
+    { "condition_id": "ac-ranking", "description": "Produce a permanent agent rank.", "evidence_required": false }
+  ],
+  "approvals": [],
+  "events": [
+    {
+      "sequence": 1,
+      "event_id": "event-proposed",
+      "from": null,
+      "to": "proposed",
+      "actor": { "actor_id": "human:manager", "kind": "human" },
+      "at": "2026-07-13T10:00:00Z",
+      "reason": "Management requested an agent ranking."
+    }
+  ],
+  "blockers": [],
+  "reported_activity": [],
+  "agent_profile": { "name": "agent-7", "rank": 1 }
+}
