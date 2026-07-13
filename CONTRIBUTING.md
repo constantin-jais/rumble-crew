@@ -29,7 +29,7 @@ Small documentation fixes, fixture additions, typo fixes, and focused tests can 
 
 ## Project focus
 
-This repository focuses on human/agent teamwork specs, approvals, statuses, and evidence.
+This repository focuses on human governance of agentic missions: scope, risk, approvals, statuses, blockers, outcomes, and evidence. A card represents a mission, never an agent profile; orchestration remains in Agent Factory.
 
 ## Project principles
 

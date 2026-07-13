@@ -1,0 +1,36 @@
+{
+  "format": "libre-ai.agent-board.mission-record.v1",
+  "mission_id": "mission-delete-release",
+  "revision": 1,
+  "state": "approved",
+  "intent": "Delete a published release and all attached artefacts.",
+  "scope": { "in_scope": ["Delete the release"], "out_of_scope": ["Keep a recovery copy"] },
+  "risk": { "level": "critical", "reasons": ["The operation is destructive and externally visible"] },
+  "requested_by": { "actor_id": "human:release-owner", "kind": "human" },
+  "acceptance_conditions": [
+    { "condition_id": "ac-deleted", "description": "The release is no longer visible.", "evidence_required": true }
+  ],
+  "approvals": [],
+  "events": [
+    {
+      "sequence": 1,
+      "event_id": "event-proposed",
+      "from": null,
+      "to": "proposed",
+      "actor": { "actor_id": "human:release-owner", "kind": "human" },
+      "at": "2026-07-13T10:00:00Z",
+      "reason": "The release owner requested deletion."
+    },
+    {
+      "sequence": 2,
+      "event_id": "event-approved",
+      "from": "proposed",
+      "to": "approved",
+      "actor": { "actor_id": "human:release-owner", "kind": "human" },
+      "at": "2026-07-13T10:01:00Z",
+      "reason": "The requester self-approved the critical operation."
+    }
+  ],
+  "blockers": [],
+  "reported_activity": []
+}

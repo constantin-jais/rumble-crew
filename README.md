@@ -1,18 +1,18 @@
 <p align="center">
-  <img src=".github/assets/repository-card.svg" alt="Libre AI Agent Board, represented by tasks moving through visible columns and approval gates." width="100%">
+  <img src=".github/assets/repository-card.svg" alt="Libre AI Agent Board, represented by missions moving through visible columns and approval gates." width="100%">
 </p>
 
 # Libre AI Agent Board
 
-A future human-and-agent work surface for tasks, blockers, approvals and evidence.
+A future human decision surface for agentic missions, blockers, approvals and evidence.
 
 ## Status
 
 | | |
 | --- | --- |
-| Maturity | **Specification** |
-| Works today | product boundary, contribution roadmap and security policy |
-| Not available | there is no runtime, local board or hosted collaboration product |
+| Maturity | **Contract-first** |
+| Works today | tested `MissionRecord v1` contract and a side-effect-free local transition engine |
+| Not available | there is no local board, persistence, agent execution or hosted collaboration product |
 | Historical ID | `rumble-crew` may remain in historical references only |
 
 This repository intentionally avoids presenting a specification as an operational product.
@@ -21,17 +21,28 @@ This repository intentionally avoids presenting a specification as an operationa
 
 Agent Board is intended to make agentic work understandable and governable:
 
-- who is doing what and why;
-- current status and blockers;
-- required human decisions and approvals;
-- evidence attached to execution outcomes;
-- bounded visibility of skills and activity.
+- one card represents a mission, never an agent profile;
+- the mission states its intent, scope, risk and acceptance conditions;
+- current status, blockers and required human decisions stay visible;
+- reported activity remains distinct from verified outcomes;
+- every approval, refusal and transition retains an author and a reason.
 
-It does **not** execute or route agents, inspect tools, store generic artifacts, or replace a general project-management suite. Those concerns remain independent and are connected through explicit contracts.
+It does **not** execute or route agents, inspect tools, store generic artifacts, profile agents, or replace a general project-management suite. Agent Factory owns orchestration and execution; Agent Board owns the human decision surface connected through explicit contracts.
+
+## Contract proof
+
+`MissionRecord v1` makes the first lifecycle boundary executable. It keeps scope, risk, acceptance conditions, approvals, blockers, reported activity, submitted result and human verdict distinct. High and critical missions require approval by a human other than the requester; activity alone can never satisfy a result.
+
+```bash
+python3 scripts/validate_mission_contracts.py
+python3 -m unittest discover scripts/tests -v
+```
+
+The contract and positive/negative fixtures live under `schemas/` and `fixtures/mission-record/`. `scripts/mission_runtime.py` applies optimistic-revision transitions to an immutable copy and validates the resulting record. Its tests cover start, declared activity, block, recovery, result submission, human acceptance, pre-execution refusal, stale writes and forbidden service verdicts. It does not persist data, execute or route an agent.
 
 ## Next evidence
 
-The next milestone is a fixture-backed `AgentTaskRequest` lifecycle with explicit approval, failure and recovery semantics. A runtime should not be announced before that contract is visible and tested.
+The next milestone is a local read-only board projection consuming the transition engine across proposal, approval, blocked execution, recovery, result submission and human acceptance or refusal. Product availability should not be announced before that projection exists.
 
 ## Contributing
 

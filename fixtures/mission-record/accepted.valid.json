@@ -1,0 +1,93 @@
+{
+  "format": "libre-ai.agent-board.mission-record.v1",
+  "mission_id": "mission-verify-static-site",
+  "revision": 3,
+  "state": "accepted",
+  "intent": "Verify the static site artefact without deploying it.",
+  "scope": {
+    "in_scope": ["Run the documented local checks", "Attach the redacted test report"],
+    "out_of_scope": ["Deploy or modify remote infrastructure"]
+  },
+  "risk": {
+    "level": "low",
+    "reasons": ["Read-only local verification with no network mutation"]
+  },
+  "requested_by": { "actor_id": "human:maintainer", "kind": "human" },
+  "acceptance_conditions": [
+    {
+      "condition_id": "ac-checks-green",
+      "description": "All documented local checks complete successfully.",
+      "evidence_required": true
+    }
+  ],
+  "approvals": [],
+  "events": [
+    {
+      "sequence": 1,
+      "event_id": "event-proposed",
+      "from": null,
+      "to": "proposed",
+      "actor": { "actor_id": "human:maintainer", "kind": "human" },
+      "at": "2026-07-13T08:00:00Z",
+      "reason": "The release candidate needs a reproducible local check."
+    },
+    {
+      "sequence": 2,
+      "event_id": "event-approved",
+      "from": "proposed",
+      "to": "approved",
+      "actor": { "actor_id": "human:maintainer", "kind": "human" },
+      "at": "2026-07-13T08:02:00Z",
+      "reason": "The mission is bounded, reversible and read-only."
+    },
+    {
+      "sequence": 3,
+      "event_id": "event-running",
+      "from": "approved",
+      "to": "running",
+      "actor": { "actor_id": "service:agent-factory", "kind": "service" },
+      "at": "2026-07-13T08:03:00Z",
+      "reason": "Agent Factory started the approved local command set."
+    },
+    {
+      "sequence": 4,
+      "event_id": "event-result-submitted",
+      "from": "running",
+      "to": "result_submitted",
+      "actor": { "actor_id": "service:agent-factory", "kind": "service" },
+      "at": "2026-07-13T08:06:00Z",
+      "reason": "The command set completed and evidence was attached."
+    },
+    {
+      "sequence": 5,
+      "event_id": "event-accepted",
+      "from": "result_submitted",
+      "to": "accepted",
+      "actor": { "actor_id": "human:maintainer", "kind": "human" },
+      "at": "2026-07-13T08:10:00Z",
+      "reason": "The attached report satisfies the acceptance condition."
+    }
+  ],
+  "blockers": [],
+  "reported_activity": [
+    {
+      "activity_id": "activity-checks-run",
+      "reported_by": { "actor_id": "service:agent-factory", "kind": "service" },
+      "at": "2026-07-13T08:05:00Z",
+      "summary": "Executed the declared checks in the local worktree."
+    }
+  ],
+  "execution_ref": "agent-factory-run:local-verify-001",
+  "result": {
+    "summary": "All declared checks passed; no deployment was attempted.",
+    "evidence_refs": ["sha256:7f83b1657ff1fc53b92dc18148a1d65dfa13514b"],
+    "submitted_by": { "actor_id": "service:agent-factory", "kind": "service" },
+    "submitted_at": "2026-07-13T08:06:00Z"
+  },
+  "human_verdict": {
+    "decision": "accepted",
+    "actor": { "actor_id": "human:maintainer", "kind": "human" },
+    "at": "2026-07-13T08:10:00Z",
+    "reason": "The evidence matches the requested read-only mission."
+  }
+}

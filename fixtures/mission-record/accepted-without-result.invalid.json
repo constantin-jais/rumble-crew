@@ -1,0 +1,50 @@
+{
+  "format": "libre-ai.agent-board.mission-record.v1",
+  "mission_id": "mission-claim-success",
+  "revision": 1,
+  "state": "accepted",
+  "intent": "Accept a mission based only on reported activity.",
+  "scope": { "in_scope": ["Review the mission"], "out_of_scope": [] },
+  "risk": { "level": "low", "reasons": ["No external side effect is requested"] },
+  "requested_by": { "actor_id": "human:owner", "kind": "human" },
+  "acceptance_conditions": [
+    { "condition_id": "ac-proof", "description": "A result must carry evidence.", "evidence_required": true }
+  ],
+  "approvals": [],
+  "events": [
+    {
+      "sequence": 1,
+      "event_id": "event-proposed",
+      "from": null,
+      "to": "proposed",
+      "actor": { "actor_id": "human:owner", "kind": "human" },
+      "at": "2026-07-13T11:00:00Z",
+      "reason": "The owner proposed a bounded review."
+    },
+    {
+      "sequence": 2,
+      "event_id": "event-accepted",
+      "from": "proposed",
+      "to": "accepted",
+      "actor": { "actor_id": "human:owner", "kind": "human" },
+      "at": "2026-07-13T11:01:00Z",
+      "reason": "Activity was reported but no result exists."
+    }
+  ],
+  "blockers": [],
+  "reported_activity": [
+    {
+      "activity_id": "activity-claimed",
+      "reported_by": { "actor_id": "service:runner", "kind": "service" },
+      "at": "2026-07-13T11:00:30Z",
+      "summary": "The runner claims the work completed."
+    }
+  ],
+  "result": null,
+  "human_verdict": {
+    "decision": "accepted",
+    "actor": { "actor_id": "human:owner", "kind": "human" },
+    "at": "2026-07-13T11:01:00Z",
+    "reason": "The activity claim was treated as a result."
+  }
+}
