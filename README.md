@@ -1,65 +1,73 @@
-> [!WARNING]
-> **Frozen on 2026-07-16 — reserved as the future home of Agent Board ([monorepo ADR-0008](https://github.com/libre-ai/libre-ai/blob/main/docs/adr/0008-multi-repo-target-topology-and-brand.md)).**
-> Agent Board is being rebuilt from locked contracts in the canonical base repository [`libre-ai/libre-ai`](https://github.com/libre-ai/libre-ai) (target: `apps/missions`). This repository will reopen as the real product repository when the owner activates it. Everything below describes the pre-freeze state and no longer reflects the current architecture or roadmap.
+**English** · [Français](README.fr.md)
 
-<p align="center">
-  <img src=".github/assets/repository-card.svg" alt="Libre AI Agent Board, represented by missions moving through visible columns and approval gates." width="100%">
-</p>
+> [!NOTE]
+> **Reserved · future home of Missions** — rebuilt in the canonical base repository [`libre-ai/libre-ai`](https://github.com/libre-ai/libre-ai) ([multi-repo topology, ADR-0008](https://github.com/libre-ai/libre-ai/blob/main/docs/adr/0008-multi-repo-target-topology-and-brand.md)).
+> This repository will reopen as the real application repository when the owner activates it, consuming the base as a versioned dependency. The foundations described below are **being built now** — with links to the code that already exists.
 
-# Libre AI Agent Board
+# Missions
 
-A future human decision surface for agentic missions, blockers, approvals and evidence.
+**The authority that governs bounded agent missions.** A requester proposes a mission — a bounded piece of work handed to agents; two independent reviewer agents approve the same immutable plan; Missions authorizes it; an orchestrator executes it; and the result is validated by quorum before it counts. **Reported activity stays distinct from validated results.**
 
-## Status
+Missions is the couche-2 (Polaris) human authority over agent orchestration: it decides what is allowed, records the evidence, and never lets an agent's claim of work stand as a validated result on its own.
 
-| | |
-| --- | --- |
-| Maturity | **Contract-first** |
-| Works today | tested `MissionRecord v1` contract and a side-effect-free local transition engine |
-| Not available | there is no local board, persistence, agent execution or hosted collaboration product |
-| Historical ID | `rumble-crew` may remain in historical references only |
+## Why it's different
 
-Readiness cockpit: [docs/product-readiness.md](docs/product-readiness.md).
+- **Two-agent quorum.** No single identity — human or agent — authorizes its own work. Two eligible reviewers, distinct from every contributor, approve the same **immutable plan digest**, then the same **immutable result digest**.
+- **Reported ≠ validated.** What an agent reports it did is kept separate from what has been quorum-validated. Observation never silently becomes truth.
+- **Immutable digests.** Authorization binds to an exact plan digest; a changed result requires fresh reviews. Past evidence is never rewritten.
+- **Human control gate retained.** Protected canonical contracts, auth, migrations, releases and deployments keep an additional human control gate on top of the agent quorum.
+- **Deny by default.** An unknown or self-reviewing reviewer, a stale digest, or an expired authorization is refused, fail-closed.
 
-This repository intentionally avoids presenting a specification as an operational product.
+## Status — spec-published, foundations under construction
 
-## Product boundary
+Missions is being rebuilt from locked contracts. It is **not released yet**; the v1 authority baseline already exists and is proven in the base repository:
 
-Agent Board is intended to make agentic work understandable and governable:
+| Foundation                                      | State      | Evidence                                                                                                                                                      |
+| ----------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **v1 domain state machine**                     | ✅ built   | Mission lifecycle as a pure state machine ([#151](https://github.com/libre-ai/libre-ai/pull/151))                                                             |
+| **Tenant-scoped RLS persistence**               | ✅ built   | Append-only, row-level-security isolation ([#152](https://github.com/libre-ai/libre-ai/pull/152))                                                             |
+| **Authorization matrix**                        | ✅ built   | App-side authorization conformant to the missions-v1 contract ([#153](https://github.com/libre-ai/libre-ai/pull/153))                                         |
+| **Accessible cockpit**                          | ✅ built   | Server-rendered, keyboard-accessible read view ([#154](https://github.com/libre-ai/libre-ai/pull/154))                                                        |
+| **Command service**                             | ✅ built   | Composes authorization → domain → persistence ([#155](https://github.com/libre-ai/libre-ai/pull/155))                                                         |
+| **Adversarial write-path qualification**        | ✅ built   | Release qualification of the write path ([#157](https://github.com/libre-ai/libre-ai/pull/157))                                                               |
+| **Orchestration contracts + engine brick**      | ✅ present | `mission-record.v2`, `orchestrator-control/event`, `agent-review-quorum` schemas + golden vectors (quorum, transitions, digests); `crates/agent-orchestrator` |
+| **v2 two-agent quorum**                         | ⏳ next    | Contract locked, unimplemented: agent-signed reviews, reviewer isolation, nonce/expiry                                                                        |
+| **Orchestrator event binding + decision gates** | ⏳ next    | Accept orchestrator-signed events; block/resume on human decision requests                                                                                    |
+| **Agent Board** — operational projection        | ⏳ next    | The read-only dashboard (fleet, task board, live progress) that projects Missions events                                                                      |
 
-- one card represents a mission, never an agent profile;
-- the mission states its intent, scope, risk and acceptance conditions;
-- current status, blockers and required human decisions stay visible;
-- reported activity remains distinct from verified outcomes;
-- every approval, refusal and transition retains an author and a reason.
+This repository is public and reserved. **Benchmark target:** managed-agents platforms (e.g. Multica) — reached through governed authorization and quorum evidence rather than raw task throughput.
 
-It does **not** execute or route agents, inspect tools, store generic artifacts, profile agents, or replace a general project-management suite. Agent Factory owns orchestration and execution; Agent Board owns the human decision surface connected through explicit contracts.
+## How it works
 
-## Contract proof
+1. **Propose / review** — a requester creates a mission from an accepted planning handoff; a deterministic plan body is reviewed blindly by two eligible agents on the same digest.
+2. **Authorize / observe** — Missions verifies the plan quorum and emits an **expiring authorization**; the orchestrator reports causal events while an operator may pause or cancel within policy.
+3. **Validate** — the result is approved by a second quorum on the immutable result digest before it counts as validated; reported activity that never reached quorum is never promoted to truth.
 
-`MissionRecord v1` makes the first lifecycle boundary executable. It keeps scope, risk, acceptance conditions, approvals, blockers, reported activity, submitted result and human verdict distinct. High and critical missions require approval by a human other than the requester; activity alone can never satisfy a result.
+## Architecture — built from interoperable bricks
 
-```bash
-python3 scripts/validate_mission_contracts.py
-python3 -m unittest discover scripts/tests -v
-```
+Missions is the authority of the couche-2 human surface. Around it, each brick is independently versioned and interoperable (the multi-repo target of [ADR-0008](https://github.com/libre-ai/libre-ai/blob/main/docs/adr/0008-multi-repo-target-topology-and-brand.md)).
 
-The contract and positive/negative fixtures live under `schemas/` and `fixtures/mission-record/`. `scripts/mission_runtime.py` applies optimistic-revision transitions to an immutable copy and validates the resulting record. Its tests cover start, declared activity, block, recovery, result submission, human acceptance, pre-execution refusal, stale writes and forbidden service verdicts. It does not persist data, execute or route an agent. See the canonical local cockpit: [docs/product-readiness.md](docs/product-readiness.md).
+| Brick                                          | Role                                 | Interface it exposes / consumes                                                                         |
+| ---------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| **Missions** (`apps/missions`)                 | The authority — control plane        | Proposes, reviews, authorizes, validates; emits authorization + mission events                          |
+| **Agent Board** (`apps/agent-board`, ⏳)       | The projection — observability plane | Read-only view of Missions events: fleet, task board, live progress; never writes mission state         |
+| **Orchestrator** (`crates/agent-orchestrator`) | The execution engine                 | Plans, executes, enforces budget, reports causal events; consumes an expiring authorization             |
+| **Contracts**                                  | Locked interoperability surface      | `mission-record.v2`, `orchestrator-control/event.v1`, `agent-review-quorum.v1` schemas + golden vectors |
 
-## Next evidence
+The authority (Missions) **writes** the state of truth; the board **reads** it to make the fleet observable; the orchestrator **runs** the work between them. The board holds no authority — it cannot authorize, only display.
 
-The next milestone is a local read-only board projection consuming the transition engine across proposal, approval, blocked execution, recovery, result submission and human acceptance or refusal. Product availability should not be announced before that projection exists.
+## Where the work happens
 
-## Contributing
+All active development is in the base repository, under:
 
-Start with:
+- `apps/missions` — the authority (domain, authorization, persistence, cockpit, command service)
+- `crates/agent-orchestrator` — the execution engine
+- `contracts/` — the locked schemas, orchestration contracts and golden vectors
+- [`docs/apps/missions.md`](https://github.com/libre-ai/libre-ai/blob/main/docs/apps/missions.md) — the Missions authority brief
+- [`docs/apps/agent-board.md`](https://github.com/libre-ai/libre-ai/blob/main/docs/apps/agent-board.md) — the Agent Board projection brief
 
-- [Roadmap](ROADMAP.md)
-- [Contribution guide](CONTRIBUTING.md)
-- [Security policy](SECURITY.md)
-
-Contributions should improve observable contracts and evidence rather than add speculative platform scope.
+To follow progress or contribute, open issues and pull requests in [`libre-ai/libre-ai`](https://github.com/libre-ai/libre-ai). This repository stays reserved until activation.
 
 ## License
 
-[MIT](LICENSE).
+EUPL-1.2.
